@@ -1,11 +1,29 @@
 version: '3'
 services:
   postgres:
+    container_name: postgres
     image: postgres:latest
     restart: always
     ports:
       - "5432:5432"
     volumes:
-      - <data-directory>:/var/lib/postgresql/data
+      - ~/.docker_db_data/postgres:/var/lib/postgresql/data
     env_file:
       - env-postgres.list
+    networks:
+      - postgres
+  
+  pgadmin:
+    container_name: pgadmin
+    image: dpage/pgadmin4
+    env_file: 
+      - env-postgres.list
+    volumes:
+      - ~/.docker_db_data/pgadmin:/var/lib/pgadmin
+    networks: 
+      - postgres
+    restart: always
+
+  networks:
+    postgres:
+      driver: bridge 
